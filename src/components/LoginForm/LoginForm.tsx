@@ -13,14 +13,28 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useMutation } from "@apollo/client";
-import { redirect } from "next/navigation";
+import { ApolloError, useMutation } from "@apollo/client";
+import { useRouter } from "next/navigation";
 import { ADD_USER_MUTATION } from "@/apollo/addUser";
+import { useToast } from "@/hooks/use-toast";
+import { GraphQLFormattedError } from "graphql/error";
+
+interface RegistrationError extends GraphQLFormattedError {
+  message: string;
+  locations: { line: number; column: number }[];
+  path: string[];
+  extensions: {
+    code: string;
+    originalError: Error;
+  };
+}
 
 export function LoginForm() {
   const { setTokens } = useAuthStore();
   const [login] = useMutation(LOGIN_MUTATION);
   const [addUser] = useMutation(ADD_USER_MUTATION);
+  const { toast } = useToast();
+  const router = useRouter();
 
   const fakeRegistation = async ({
     email,
@@ -33,8 +47,20 @@ export function LoginForm() {
   }) => {
     try {
       await addUser({ variables: { name: email, email, password, avatar } });
-    } catch (error) {
-      console.log("Registration error", (error as Error).message || error);
+    } catch (error: ApolloError | unknown) {
+      console.log("Registration error", error);
+      if (error instanceof ApolloError) {
+        const registrationError: GraphQLFormattedError | undefined =
+          error.graphQLErrors.find((e) => typeof e === "object");
+        throw new Error(
+          (registrationError?.extensions &&
+            (registrationError as RegistrationError).extensions.originalError
+              .message) ||
+            registrationError?.message ||
+            ""
+        );
+      }
+      throw new Error((error as Error).message || error?.toString() || "");
     }
   };
 
@@ -47,9 +73,17 @@ export function LoginForm() {
       });
       const { data } = await login({ variables: { email, password } });
       setTokens(data.login.access_token, data.login.refresh_token);
-      redirect("/my-info");
+      router.push("/my-info");
     } catch (error) {
       console.error("Login error", error);
+      toast({
+        variant: "destructive",
+        title: "Login error",
+        description:
+          typeof error === "string"
+            ? error
+            : (error as Error).message || error?.toString() || "",
+      });
     }
   };
 
