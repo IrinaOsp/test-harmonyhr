@@ -48,7 +48,7 @@ export function LoginForm() {
     try {
       await addUser({ variables: { name: email, email, password, avatar } });
     } catch (error: ApolloError | unknown) {
-      console.log("Registration error", error);
+      console.error("Registration error", error);
       if (error instanceof ApolloError) {
         const registrationError: GraphQLFormattedError | undefined =
           error.graphQLErrors.find((e) => typeof e === "object");
