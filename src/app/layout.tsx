@@ -3,14 +3,20 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "@/providers/Providers";
 import { Toaster } from "@/components/ui/toaster";
+import { CookiesProvider } from "next-client-cookies/server";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+// const geistSans = localFont({
+//   src: "./fonts/GeistVF.woff",
+//   variable: "--font-geist-sans",
+//   weight: "100 900",
+// });
+// const geistMono = localFont({
+//   src: "./fonts/GeistMonoVF.woff",
+//   variable: "--font-geist-mono",
+//   weight: "100 900",
+// });
+const interRegular = localFont({
+  src: "./fonts/Inter-Regular.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
 });
@@ -28,9 +34,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${interRegular.variable} antialiased min-h-screen w-screen`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <CookiesProvider>{children}</CookiesProvider>
+        </Providers>
         <Toaster />
       </body>
     </html>
