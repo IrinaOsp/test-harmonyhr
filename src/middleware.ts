@@ -4,7 +4,7 @@ import { getCookies } from "next-client-cookies/server";
 
 export function middleware(request: NextRequest) {
   const cookies = getCookies();
-  const token = cookies.get("accessToken");
+  const token = cookies.get("access_token");
 
   if (!token && request.nextUrl.pathname !== "/login") {
     return NextResponse.redirect(new URL("/login", request.url));

@@ -1,19 +1,18 @@
-"use client";
-
+import { MY_PROFILE_QUERY } from "@/apollo/myProfile";
 import { useAuthStore } from "@/zustand/store";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import MainPage from "@/components/MainPage/MainPage";
+import { useQuery } from "@apollo/client";
 
 export default function MyInfo() {
-  const { accessToken } = useAuthStore();
-  const router = useRouter();
+  const token = useAuthStore((state) => state.accessToken);
 
-  useEffect(() => {
-    if (!accessToken) {
-      router.push("/");
-    }
-  }, [accessToken]);
+  const data = useQuery(MY_PROFILE_QUERY, {
+    context: {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  });
 
-  return <MainPage />;
+  console.log(data.data);
+  return <div>MainPage</div>;
 }

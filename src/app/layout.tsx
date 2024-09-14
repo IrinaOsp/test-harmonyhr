@@ -33,9 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${interRegular.variable} antialiased min-h-screen w-screen`}
-      >
+      <body className={`${interRegular.variable} min-h-screen w-screen`}>
         <Providers>
           <CookiesProvider>{children}</CookiesProvider>
         </Providers>
