@@ -76,6 +76,7 @@ export default function Login() {
       const { data } = await login({ variables: { email, password } });
       setTokens(data.login.access_token, data.login.refresh_token);
       cookies.set("access_token", data.login.access_token);
+      cookies.set("refresh_token", data.login.refresh_token);
       router.push("/my-info");
     } catch (error) {
       console.error("Login error", error);
