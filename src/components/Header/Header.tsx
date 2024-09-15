@@ -10,8 +10,8 @@ import { Input } from "../ui/input";
 import { Bell, Settings } from "lucide-react";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { AvatarFallback, Avatar, AvatarImage } from "../ui/avatar";
-import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/zustand/store";
+import { usePathname } from "next/navigation";
 
 const PAGES: { path: string; name: string }[] = [
   {

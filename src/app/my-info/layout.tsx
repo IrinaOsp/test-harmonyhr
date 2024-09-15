@@ -1,4 +1,5 @@
 "use client";
+import Dashboard from "@/components/Dashboard/Dashboard";
 import Header from "@/components/Header/Header";
 
 export default function MainPageLayout({
@@ -7,6 +8,7 @@ export default function MainPageLayout({
   return (
     <>
       <Header />
+      <Dashboard />
       {children}
     </>
   );
