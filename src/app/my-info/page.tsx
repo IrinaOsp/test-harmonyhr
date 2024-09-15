@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function MyInfo() {
-  const { setTokens, refreshAccessToken, clearTokens, setProfileData } =
-    useAuthStore();
+  const { setTokens, refreshAccessToken, clearTokens } = useAuthStore();
+
   const router = useRouter();
   const cookies = useCookies();
   const accessToken = cookies.get("access_token");
@@ -22,8 +22,7 @@ export default function MyInfo() {
       },
     },
     onCompleted: (data) => {
-      console.log(data);
-      setProfileData(data);
+      useAuthStore.getState().setProfileData(data.myProfile);
     },
   });
 
