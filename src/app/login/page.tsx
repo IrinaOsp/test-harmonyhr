@@ -77,7 +77,7 @@ export default function Login() {
       setTokens(data.login.access_token, data.login.refresh_token);
       cookies.set("access_token", data.login.access_token);
       cookies.set("refresh_token", data.login.refresh_token);
-      router.push("/my-info");
+      router.push("/my-info/time-off");
     } catch (error) {
       console.error("Login error", error);
       toast({
