@@ -11,36 +11,76 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Settings } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import TimeOff from "../TimeOff/TimeOff";
-import EmptySection from "../EmptySection/EmptySection";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "../ui/navigation-menu";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-const TABS = [
-  "Personal",
-  "Job",
-  "Time Off",
-  "Emergency",
-  "Documents",
-  "Notes",
-  "Benefits",
-  "Training",
-  "Assets",
-  "More",
+const PAGES: { path: string; name: string }[] = [
+  {
+    path: "personal",
+    name: "Personal",
+  },
+  {
+    path: "job",
+    name: "Job",
+  },
+  {
+    path: "time-off",
+    name: "Time Off",
+  },
+  {
+    path: "emergency",
+    name: "Emergency",
+  },
+  {
+    path: "documents",
+    name: "Documents",
+  },
+  {
+    path: "notes",
+    name: "Notes",
+  },
+  {
+    path: "benefits",
+    name: "Benefits",
+  },
+  {
+    path: "training",
+    name: "Training",
+  },
+  {
+    path: "assets",
+    name: "Assets",
+  },
+  {
+    path: "more",
+    name: "More",
+  },
 ];
 
 export default function Dashboard() {
   const { avatar, name } = useAuthStore((state) => state.profileData);
+  const pathname = usePathname();
+  const currentPage = pathname.split("/").pop();
 
   return (
-    <div className="w-lvw flex bg-slate-200 pt-[34px] px-[72px]">
-      <Avatar className={`${avatar ? "" : "animate-pulse"} size-[150px]`}>
+    <div className="w-lvw flex justify-between bg-slate-200 pt-[34px] px-[72px]">
+      <Avatar
+        className={`${
+          avatar ? "" : "animate-pulse"
+        } relative z-20 size-[150px]`}
+      >
         <AvatarImage src={avatar || ""} alt="user photo" />
       </Avatar>
-      <div className="w-full">
+      <div className="w-[calc(100% - 72px)] flex flex-col justify-between mt-[33px]">
         <div className="flex justify-between">
-          <h2 className="my-[34px] font-semibold text-3xl text-[28px]">
-            {name}
-          </h2>
+          <h2 className="font-semibold text-3xl text-[28px]">{name}</h2>
           <div className="flex gap-4 justify-center items-center">
             <Select>
               <SelectTrigger className="w-[162px] h-8 border border-slate-400">
@@ -66,27 +106,33 @@ export default function Dashboard() {
             </Select>
           </div>
         </div>
-        <Tabs defaultValue="account" className="w-full bg-slate-200">
-          <TabsList className="flex w-full">
-            {TABS.map((tab) => (
-              <TabsTrigger
-                key={tab}
-                value={tab}
-                data-state={tab === "Time Off" ? "active" : "inactive"}
-                className={`$${
-                  tab === "Time Off" ? "bg-white" : "bg-slate-200"
-                } p-4 rounded-t-xl`}
-              >
-                {tab}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          {TABS.map((tab) => (
-            <TabsContent key={tab} value={tab}>
-              {tab === "Time Off" ? <TimeOff /> : <EmptySection />}
-            </TabsContent>
-          ))}
-        </Tabs>
+        <NavigationMenu className="max-w-full flex-1 mt-[30px] children:w-full bg-slate-200">
+          <NavigationMenuList className="flex -mb-1 gap-4 justify-between">
+            {PAGES.map(({ path, name }) =>
+              path !== "more" ? (
+                <NavigationMenuItem key={name}>
+                  <Link
+                    href={`/my-info/${path}`}
+                    className={`${
+                      currentPage === path ? "bg-white" : ""
+                    } inline-block text-sm font-medium p-4 rounded-t-xl`}
+                  >
+                    {name}
+                  </Link>
+                </NavigationMenuItem>
+              ) : (
+                <NavigationMenuItem key={name}>
+                  <NavigationMenuTrigger className="bg-slate-200 text-sm font-medium p-4 rounded-t-xl">
+                    {name}
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <div className="p-2">more...</div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              )
+            )}
+          </NavigationMenuList>
+        </NavigationMenu>
       </div>
     </div>
   );

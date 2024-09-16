@@ -4,6 +4,8 @@ import { Providers } from "@/providers/Providers";
 import { Toaster } from "@/components/ui/toaster";
 import { CookiesProvider } from "next-client-cookies/server";
 import { Inter } from "next/font/google";
+import HeaderWrapper from "@/components/HeaderWrapper/HeaderWrapper";
+import Header from "@/components/Header/Header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,9 +21,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen w-screen`}>
+      <body className={`${inter.className} min-h-screen bg-slate-100`}>
         <Providers>
-          <CookiesProvider>{children}</CookiesProvider>
+          <CookiesProvider>
+            <HeaderWrapper>
+              <Header />
+            </HeaderWrapper>
+            {children}
+          </CookiesProvider>
         </Providers>
         <Toaster />
       </body>

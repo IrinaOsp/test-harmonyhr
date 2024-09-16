@@ -19,23 +19,23 @@ const PAGES: { path: string; name: string }[] = [
     name: "Home",
   },
   {
-    path: "/my-info",
+    path: "my-info",
     name: "My Info",
   },
   {
-    path: "/people",
+    path: "people",
     name: "People",
   },
   {
-    path: "/hiring",
+    path: "hiring",
     name: "Hiring",
   },
   {
-    path: "/reports",
+    path: "reports",
     name: "Reports",
   },
   {
-    path: "/files",
+    path: "files",
     name: "Files",
   },
 ];
@@ -43,6 +43,7 @@ const PAGES: { path: string; name: string }[] = [
 export default function Header() {
   const { avatar, name } = useAuthStore((state) => state.profileData);
   const pathname = usePathname();
+  const firstLevelPage = pathname.split("/")[1];
 
   return (
     <header className="w-full flex justify-between items-start pt-8 px-6">
@@ -53,9 +54,9 @@ export default function Header() {
             <NavigationMenuItem key={page.path}>
               <Link
                 className={`${
-                  pathname === page.path ? "bg-slate-200" : ""
+                  firstLevelPage === page.path ? "bg-slate-200" : ""
                 } inline-block text-lg p-4 rounded-t-xl`}
-                href={page.path}
+                href={`/${page.path}`}
               >
                 {page.name}
               </Link>
