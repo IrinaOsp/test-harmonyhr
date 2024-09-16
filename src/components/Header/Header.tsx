@@ -1,6 +1,8 @@
 "use client";
 
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import { useCookies } from "next-client-cookies";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -11,7 +13,12 @@ import { Bell, Settings } from "lucide-react";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { AvatarFallback, Avatar, AvatarImage } from "../ui/avatar";
 import { useAuthStore } from "@/zustand/store";
-import { usePathname } from "next/navigation";
+import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "../ui/dropdown-menu";
 
 const PAGES: { path: string; name: string }[] = [
   {
@@ -42,8 +49,18 @@ const PAGES: { path: string; name: string }[] = [
 
 export default function Header() {
   const { avatar, name } = useAuthStore((state) => state.profileData);
+  const { clearTokens } = useAuthStore();
   const pathname = usePathname();
   const firstLevelPage = pathname.split("/")[1];
+  const cookies = useCookies();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    cookies.remove("access_token");
+    cookies.remove("refresh_token");
+    clearTokens();
+    router.push("/login");
+  };
 
   return (
     firstLevelPage &&
@@ -74,12 +91,23 @@ export default function Header() {
           <Settings className="size-6" />
           <QuestionMarkCircledIcon className="size-6" />
           <Bell className="size-6" />
-          <Avatar className={`${avatar ? "" : "animate-pulse"} size-[38px]`}>
-            <AvatarImage src={avatar || ""} alt="user photo" />
-            <AvatarFallback>
-              {name ? name!.charAt(0).toUpperCase() : ""}
-            </AvatarFallback>
-          </Avatar>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar
+                className={`${avatar ? "" : "animate-pulse"} size-[38px]`}
+              >
+                <AvatarImage src={avatar || ""} alt="user photo" />
+                <AvatarFallback>
+                  {name ? name!.charAt(0).toUpperCase() : ""}
+                </AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-max">
+              <Button variant="outline" onClick={handleLogout}>
+                Log out
+              </Button>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
     )
