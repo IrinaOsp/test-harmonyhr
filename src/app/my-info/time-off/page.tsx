@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Clock, Cross, FileClockIcon, MountainSnow } from "lucide-react";
 import Image from "next/image";
+import HistoryTable from "@/components/HistoryTable/HistoryTable";
 
 const CARDS: {
   line1: string;
@@ -45,7 +46,7 @@ const CARDS: {
 
 export default function TimeOff() {
   return (
-    <Card className="w-full rounded-t-none">
+    <Card className="w-full rounded-t-none pb-[92px]">
       <CardHeader className="py-[13px] flex flex-row justify-between items-end m-4 border-slate-400 border-b-2">
         <h3 className="text-xl mb-[3px]">
           <FileClockIcon className="inline-block size-4 mr-3" />
@@ -120,7 +121,7 @@ export default function TimeOff() {
         </div>
 
         <div className="pt-6">
-          <h4 className="flex items-center">
+          <h4 className="flex items-center mb-4">
             <Image
               src="/icons/Group 9.svg"
               alt="square clock"
@@ -130,6 +131,7 @@ export default function TimeOff() {
             />
             <span className="text-sm text-cyan-900">History</span>
           </h4>
+          <HistoryTable />
         </div>
       </CardContent>
     </Card>
