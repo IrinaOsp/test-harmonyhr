@@ -1,8 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## HarmonyHR - HR-Tech Application
+
+This is a [Next.js](https://nextjs.org) application designed as a test task.
+he project simulates an HR-tech platform where users can manage their profile and view time off information.
+
+## Features
+
+- Login Page: Users can log in using JWT-based authentication with Apollo GraphQL.
+- My Info / Time Off Page: Displays user profile information and time-off details with - test data for other fields.
+- Responsive Design: Adapted for various devices using Tailwind CSS.
+- GraphQL API Integration: Interacts with a mock HR-tech GraphQL API for authentication and user data.
+- State Management: Uses Zustand for global state management.
+- Component Library: Utilizes shadcn/ui for prebuilt components, with custom modifications where necessary.
+
+## Pages
+
+### Authentication
+
+As the project has limited functionality, during login it also provides registration.
+In real project it will be two different functionalities and separate forms/pages - signin and signup.
+
+- **Login**: Uses the login mutation with JWT tokens.
+- **Token Refresh**: Uses the refreshToken mutation.
+- **Profile Data**: Fetched using the myProfile query (only name and avatar are used in the app).
+
+### My Info / Time Off Page
+
+Displays user profile information fetched via the myProfile query and test data for time-off details.
+
+The page is protected and can only be accessed by authenticated users.
 
 ## Getting Started
 
-First, run the development server:
+To run this project locally, follow these steps:
+
+```bash
+git clone https://github.com/your-username/harmonyhr.git
+cd test-tvoe
+```
+
+Then install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
@@ -15,22 +57,3 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
