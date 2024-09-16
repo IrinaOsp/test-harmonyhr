@@ -1,6 +1,13 @@
 "use client";
 
+import { useRouter, usePathname } from "next/navigation";
+import { useCookies } from "next-client-cookies";
+import Link from "next/link";
+import { useEffect } from "react";
+import { useLazyQuery } from "@apollo/client";
+
 import { useAuthStore } from "@/zustand/store";
+import { MY_PROFILE_QUERY } from "@/apollo/myProfile";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import {
   Select,
@@ -18,63 +25,63 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "../ui/navigation-menu";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-const PAGES: { path: string; name: string }[] = [
-  {
-    path: "personal",
-    name: "Personal",
-  },
-  {
-    path: "job",
-    name: "Job",
-  },
-  {
-    path: "time-off",
-    name: "Time Off",
-  },
-  {
-    path: "emergency",
-    name: "Emergency",
-  },
-  {
-    path: "documents",
-    name: "Documents",
-  },
-  {
-    path: "notes",
-    name: "Notes",
-  },
-  {
-    path: "benefits",
-    name: "Benefits",
-  },
-  {
-    path: "training",
-    name: "Training",
-  },
-  {
-    path: "assets",
-    name: "Assets",
-  },
-  {
-    path: "more",
-    name: "More",
-  },
-];
+import { PAGES } from "./dataPages";
 
 export default function Dashboard() {
   const { avatar, name } = useAuthStore((state) => state.profileData);
+  const { setTokens, refreshAccessToken, clearTokens } = useAuthStore();
   const pathname = usePathname();
+  const router = useRouter();
+  const cookies = useCookies();
+
   const currentPage = pathname.split("/").pop();
+  const accessToken = cookies.get("access_token");
+  const refreshToken = cookies.get("refresh_token");
+
+  const [fetchProfile] = useLazyQuery(MY_PROFILE_QUERY, {
+    context: {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+    onCompleted: (data) => {
+      useAuthStore.getState().setProfileData(data.myProfile);
+    },
+  });
+
+  useEffect(() => {
+    const performRequestWithToken = async () => {
+      if (!accessToken) {
+        router.push("/login");
+        return;
+      }
+
+      try {
+        await fetchProfile();
+      } catch (err) {
+        if (accessToken && refreshToken) {
+          try {
+            setTokens(accessToken, refreshToken);
+            await refreshAccessToken();
+            await fetchProfile();
+          } catch (refreshErr) {
+            clearTokens();
+            router.push("/login");
+          }
+        } else {
+          clearTokens();
+          router.push("/login");
+        }
+      }
+    };
+
+    performRequestWithToken();
+  }, [accessToken, refreshToken]);
 
   return (
-    <div className="w-lvw flex justify-between bg-slate-200 pt-[34px] px-[72px]">
+    <div className="w-full flex justify-between bg-slate-200 pt-[34px] px-[72px]">
       <Avatar
-        className={`${
-          avatar ? "" : "animate-pulse"
-        } relative z-20 size-[150px]`}
+        className={`${!avatar ?? "animate-pulse"} relative z-20 size-[150px]`}
       >
         <AvatarImage src={avatar || ""} alt="user photo" />
       </Avatar>
