@@ -15,7 +15,7 @@ import { Card } from "../ui/card";
 
 export default function Aside() {
   return (
-    <aside className="relative max-w-[225px]">
+    <aside className="max-lg:hidden relative max-w-[225px]">
       <div className="relative -top-[14px] flex flex-col gap-4">
         <Card className="bg-white text-sm p-6">
           <a href="tel:07911654321" className="flex gap-2">

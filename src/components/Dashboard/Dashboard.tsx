@@ -3,7 +3,7 @@
 import { useRouter, usePathname } from "next/navigation";
 import { useCookies } from "next-client-cookies";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLazyQuery } from "@apollo/client";
 
 import { useAuthStore } from "@/zustand/store";
@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Settings } from "lucide-react";
+import { EllipsisVertical, Settings } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -26,6 +26,8 @@ import {
   NavigationMenuTrigger,
 } from "../ui/navigation-menu";
 import { PAGES } from "./dataPages";
+import { Button } from "../ui/button";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export default function Dashboard() {
   const { avatar, name } = useAuthStore((state) => state.profileData);
@@ -33,6 +35,7 @@ export default function Dashboard() {
   const pathname = usePathname();
   const router = useRouter();
   const cookies = useCookies();
+  const [isVisible, setIsVisible] = useState(false);
 
   const currentPage = pathname.split("/").pop();
   const accessToken = cookies.get("access_token");
@@ -79,16 +82,26 @@ export default function Dashboard() {
   }, [accessToken, refreshToken]);
 
   return (
-    <div className="w-full flex justify-between bg-slate-200 pt-[34px] px-[72px]">
+    <div className="relative w-full flex justify-between bg-slate-200 pt-[34px] px-[72px] max-sm:p-0">
       <Avatar
-        className={`${!avatar ?? "animate-pulse"} relative z-20 size-[150px]`}
+        className={`${
+          !avatar ?? "animate-pulse"
+        } absolute bg-slate-300 sm:relative z-20 size-[60px] max-sm:top-6 max-sm:left-6 sm:size-[150px] sm:ml-[37px] sm:mr-[63px]`}
       >
         <AvatarImage src={avatar || ""} alt="user photo" />
       </Avatar>
       <div className="w-[calc(100% - 72px)] flex flex-col justify-between mt-[33px]">
         <div className="flex justify-between">
-          <h2 className="font-semibold text-3xl text-[28px]">{name}</h2>
-          <div className="flex gap-4 justify-center items-center">
+          <h2 className="font-semibold text-3xl text-[28px] max-sm:ml-[106px]">
+            {name}
+          </h2>
+          <div
+            className={`flex ${
+              isVisible
+                ? "max-sm:flex-col gap-2 bg-white p-3 items-center rounded-lg border border-slate-400 z-30"
+                : "hidden"
+            } max-sm:absolute top-0 right-1 gap-4 justify-center items-end max-sm:mr-24 max-sm:mt-1 sm:items-center`}
+          >
             <Select>
               <SelectTrigger className="w-[162px] h-8 border border-slate-400">
                 <SelectValue placeholder="Request a Change" />
@@ -113,33 +126,43 @@ export default function Dashboard() {
             </Select>
           </div>
         </div>
-        <NavigationMenu className="max-w-full flex-1 mt-[30px] children:w-full bg-slate-200">
-          <NavigationMenuList className="flex -mb-1 gap-4 justify-between">
-            {PAGES.map(({ path, name }) =>
-              path !== "more" ? (
-                <NavigationMenuItem key={name}>
-                  <Link
-                    href={`/my-info/${path}`}
-                    className={`${
-                      currentPage === path ? "bg-white" : ""
-                    } inline-block text-sm font-medium p-4 rounded-t-xl`}
-                  >
-                    {name}
-                  </Link>
-                </NavigationMenuItem>
-              ) : (
-                <NavigationMenuItem key={name}>
-                  <NavigationMenuTrigger className="bg-slate-200 text-sm font-medium p-4 rounded-t-xl">
-                    {name}
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="p-2">more...</div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              )
-            )}
-          </NavigationMenuList>
-        </NavigationMenu>
+        <Button
+          variant="ghost"
+          onClick={() => setIsVisible(!isVisible)}
+          className="absolute right-6 sm:hidden align-top"
+        >
+          <EllipsisVertical size={16} />
+        </Button>
+        <ScrollArea className="w-lvw">
+          <NavigationMenu className="justify-start flex-1 mt-[30px] bg-slate-200">
+            <NavigationMenuList className="flex -mb-1 gap-4 ">
+              {PAGES.map(({ path, name }) =>
+                path !== "more" ? (
+                  <NavigationMenuItem key={name}>
+                    <Link
+                      href={`/my-info/${path}`}
+                      className={`${
+                        currentPage === path ? "bg-white" : ""
+                      } inline-block text-nowrap text-sm font-medium p-4 rounded-t-xl`}
+                    >
+                      {name}
+                    </Link>
+                  </NavigationMenuItem>
+                ) : (
+                  <NavigationMenuItem key={name}>
+                    <NavigationMenuTrigger className="bg-slate-200 text-sm font-medium p-4 rounded-t-xl">
+                      {name}
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="p-2">more...</div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                )
+              )}
+            </NavigationMenuList>
+          </NavigationMenu>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
     </div>
   );
