@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import Link from "next/link";
 import { useCookies } from "next-client-cookies";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from "../ui/navigation-menu";
 import { Input } from "../ui/input";
 import { Bell, Menu, Search, Settings } from "lucide-react";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
