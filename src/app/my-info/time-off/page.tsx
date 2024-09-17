@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Clock, Cross, FileClockIcon, MountainSnow } from "lucide-react";
 import Image from "next/image";
 import HistoryTable from "@/components/HistoryTable/HistoryTable";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const CARDS: {
   line1: string;
@@ -46,13 +47,13 @@ const CARDS: {
 
 export default function TimeOff() {
   return (
-    <Card className="w-full rounded-t-none pb-[92px]">
+    <Card className="w-full shrink lg:max-xl:max-w-[80%] rounded-t-none pb-[92px]">
       <CardHeader className="py-[13px] flex flex-row justify-between items-end m-4 border-slate-400 border-b-2">
-        <h3 className="text-xl mb-[3px]">
+        <h3 className="max-lg:hidden text-xl mb-[3px]">
           <FileClockIcon className="inline-block size-4 mr-3" />
           <span className="text-cyan-900">Time Off</span>
         </h3>
-        <div className="flex items-end gap-4">
+        <div className="flex flex-wrap justify-end items-end gap-4">
           <div className="text-sm mb-[3px]">
             <span>Accrual Level Start Date </span>
             <span className="text-blue-800">03/09-2020</span>
@@ -63,27 +64,30 @@ export default function TimeOff() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="mx-auto flex justify-center gap-12 py-6">
-          {CARDS.map((card) => (
-            <div
-              key={card.line1}
-              className="max-w-[264px] w-full flex flex-col items-stretch text-center font-semibold"
-            >
-              <Card className="p-4 bg-slate-100">
-                <h4 className="text-xl">{card.line1}</h4>
-                <div className="flex justify-center items-center gap-2.5 text-3xl">
-                  {card.line2.icon}
-                  <span>{card.line2.data}</span>
+        <ScrollArea className="max-w-full">
+          <div className="mx-auto flex justify-center gap-12 py-6">
+            {CARDS.map((card) => (
+              <div
+                key={card.line1}
+                className="w-[264px] flex flex-col items-stretch text-center text-nowrap font-semibold"
+              >
+                <Card className="p-4 bg-slate-100">
+                  <h4 className="text-xl">{card.line1}</h4>
+                  <div className="flex justify-center items-center gap-2.5 text-3xl">
+                    {card.line2.icon}
+                    <span>{card.line2.data}</span>
+                  </div>
+                  <div className="text-sm">{card.line3}</div>
+                  <div className="h-5 text-sm text-slate-400">{card.line4}</div>
+                </Card>
+                <div className="mt-2 text-sm text-slate-400 font-medium">
+                  {card.line5}
                 </div>
-                <div className="text-sm">{card.line3}</div>
-                <div className="h-5 text-sm text-slate-400">{card.line4}</div>
-              </Card>
-              <div className="mt-2 text-sm text-slate-400 font-medium">
-                {card.line5}
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
 
         <div className="w-full pb-[13px] pt-0 border-slate-400 border-b-2">
           <div className="flex items-center">
@@ -131,7 +135,10 @@ export default function TimeOff() {
             />
             <span className="text-sm text-cyan-900">History</span>
           </h4>
-          <HistoryTable />
+          <ScrollArea>
+            <HistoryTable />
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </div>
       </CardContent>
     </Card>

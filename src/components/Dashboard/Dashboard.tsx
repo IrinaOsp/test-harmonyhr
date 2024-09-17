@@ -82,17 +82,17 @@ export default function Dashboard() {
   }, [accessToken, refreshToken]);
 
   return (
-    <div className="relative w-full flex justify-between bg-slate-200 pt-[34px] px-[72px] max-sm:p-0">
+    <div className="w-screen relative max-w-full flex justify-start bg-slate-200 pt-[34px] px-[72px] max-sm:p-0">
       <Avatar
         className={`${
           !avatar ?? "animate-pulse"
-        } absolute bg-slate-300 sm:relative z-20 size-[60px] max-sm:top-6 max-sm:left-6 sm:size-[150px] sm:ml-[37px] sm:mr-[63px]`}
+        } absolute bg-slate-300 lg:relative z-20 size-[60px] max-lg:top-6 max-lg:left-20 max-sm:left-6 sm:size-[100px] lg:size-[150px] lg:ml-[37px] lg:mr-[63px]`}
       >
         <AvatarImage src={avatar || ""} alt="user photo" />
       </Avatar>
-      <div className="w-[calc(100% - 72px)] flex flex-col justify-between mt-[33px]">
+      <div className="max-w-full lg:max-w-[calc(100%-225px)] flex flex-col justify-between mt-[33px]">
         <div className="flex justify-between">
-          <h2 className="font-semibold text-3xl text-[28px] max-sm:ml-[106px]">
+          <h2 className="font-semibold text-3xl text-[28px] max-lg:ml-32 max-sm:ml-[106px]">
             {name}
           </h2>
           <div
@@ -133,7 +133,7 @@ export default function Dashboard() {
         >
           <EllipsisVertical size={16} />
         </Button>
-        <ScrollArea className="w-lvw">
+        <ScrollArea className="max-sm:w-lvw">
           <NavigationMenu className="justify-start flex-1 mt-[30px] bg-slate-200">
             <NavigationMenuList className="flex -mb-1 gap-4 ">
               {PAGES.map(({ path, name }) =>

@@ -40,7 +40,7 @@ export default function HistoryTable() {
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} className="bg-slate-200 text-black">
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id} className="text-black">
+                <TableHead key={header.id} className="text-nowrap text-black">
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -60,7 +60,7 @@ export default function HistoryTable() {
                 className="bg-white border-b-2 border-slate-400 hover:bg-slate-200"
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="text-black">
+                  <TableCell key={cell.id} className="text-black text-nowrap">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

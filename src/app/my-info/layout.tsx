@@ -9,7 +9,7 @@ export default function MainPageLayout({
   return (
     <div className="bg-slate-100">
       <Dashboard />
-      <div className="flex justify-evenly gap-6 px-[72px]">
+      <div className="flex justify-start gap-6 sm:px-[72px]">
         <Aside />
         {children}
       </div>
