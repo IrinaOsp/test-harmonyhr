@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { useCookies } from "next-client-cookies";
@@ -9,7 +10,7 @@ import {
   NavigationMenuList,
 } from "../ui/navigation-menu";
 import { Input } from "../ui/input";
-import { Bell, Settings } from "lucide-react";
+import { Bell, Menu, Search, Settings } from "lucide-react";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { AvatarFallback, Avatar, AvatarImage } from "../ui/avatar";
 import { useAuthStore } from "@/zustand/store";
@@ -19,33 +20,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "../ui/dropdown-menu";
-
-const PAGES: { path: string; name: string }[] = [
-  {
-    path: "/",
-    name: "Home",
-  },
-  {
-    path: "my-info",
-    name: "My Info",
-  },
-  {
-    path: "people",
-    name: "People",
-  },
-  {
-    path: "hiring",
-    name: "Hiring",
-  },
-  {
-    path: "reports",
-    name: "Reports",
-  },
-  {
-    path: "files",
-    name: "Files",
-  },
-];
+import NavMenu from "./NavMenu/NavMenu";
 
 export default function Header() {
   const { avatar, name } = useAuthStore((state) => state.profileData);
@@ -54,6 +29,7 @@ export default function Header() {
   const firstLevelPage = pathname.split("/")[1];
   const cookies = useCookies();
   const router = useRouter();
+  const [isInputVisible, setIsInputVisible] = useState(false);
 
   const handleLogout = () => {
     cookies.remove("access_token");
@@ -65,32 +41,47 @@ export default function Header() {
   return (
     firstLevelPage &&
     firstLevelPage !== "login" && (
-      <header className="w-full flex justify-between items-start pt-8 px-6">
+      <header className="relative overflow-hidden w-full flex justify-between items-start max-lg:py-2 pt-8 px-6">
         <h1 className="font-semibold text-xl">HarmonyHR</h1>
-        <NavigationMenu className="self-end">
-          <NavigationMenuList>
-            {PAGES.map((page) => (
-              <NavigationMenuItem key={page.path}>
-                <Link
-                  className={`${
-                    firstLevelPage === page.path ? "bg-slate-200" : ""
-                  } inline-block text-lg p-4 rounded-t-xl`}
-                  href={`/${page.path}`}
-                >
-                  {page.name}
-                </Link>
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
-        <Input
-          className="max-w-[395px] text-lg border border-black"
-          placeholder="Search"
-        />
+        <NavMenu />
+        <div className="relative mx-8">
+          <Input
+            className="max-w-auto max-sm:hidden xl:max-w-[395px] pl-8 text-lg border border-black rounded-lg"
+            placeholder="Search"
+          ></Input>
+          <Search className="absolute top-2.5 left-2.5 z-10 max-sm:hidden size-4 max-sm:border border-black rounded-lg" />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild className="sm:hidden">
+              <Button
+                variant="outline"
+                onClick={() => setIsInputVisible(!isInputVisible)}
+                className="sm:hidden bg-inherit border border-black rounded-2xl"
+              >
+                <Search className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <Input
+                className="max-w-auto max-w-[250px] pl-8 text-lg border border-black rounded-lg"
+                placeholder="Search"
+              ></Input>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <div className="flex gap-6 justify-center items-center">
-          <Settings className="size-6" />
-          <QuestionMarkCircledIcon className="size-6" />
-          <Bell className="size-6" />
+          <Settings className="size-6 max-lg:hidden" />
+          <QuestionMarkCircledIcon className="size-6 max-lg:hidden" />
+          <Bell className="size-6 max-lg:hidden" />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="p-0 lg:hidden">
+                <Menu className="size-6 " />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <NavMenu isDropDown={true} />
+            </DropdownMenuContent>
+          </DropdownMenu>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar
