@@ -34,8 +34,8 @@ The page is protected and can only be accessed by authenticated users.
 To run this project locally, follow these steps:
 
 ```bash
-git clone https://github.com/your-username/harmonyhr.git
-cd test-tvoe
+git clone https://github.com/IrinaOsp/test-harmonyhr.git
+cd test-harmonyhr
 ```
 
 Then install dependencies:

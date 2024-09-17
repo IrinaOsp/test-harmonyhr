@@ -86,7 +86,7 @@ export default function Dashboard() {
     <div className="w-screen relative max-w-full flex justify-start bg-slate-200 pt-[34px] px-[72px] max-sm:p-0">
       <Avatar
         className={`${
-          avatar ? "animate-pulse" : ""
+          avatar ? "" : "animate-pulse"
         } absolute bg-slate-300 lg:relative z-20 size-[60px] max-lg:top-6 max-lg:left-20 max-sm:left-6 sm:size-[100px] lg:size-[150px] lg:ml-[37px] lg:mr-[63px]`}
       >
         <AvatarImage src={avatar || ""} alt="user photo" />
